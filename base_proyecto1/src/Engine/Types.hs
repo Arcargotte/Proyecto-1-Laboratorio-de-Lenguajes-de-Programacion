@@ -1,19 +1,31 @@
 module Engine.Types where
 
+import qualified Data.Map as Map
+
 -- Direcciones posibles
-data Direction = Dummy1
+data Direction = Norte | Sur | Este | Oeste 
+    deriving (Show, Eq, Ord)
 
 -- Un objeto en el juego
-data Item = Dummy2
+newtype Item = Item String deriving (Show)
 
 -- Una sala en el juego
-data Room = Dummy3
+data Room = Room {
+    description :: String,
+    exits :: Map.Map Direction String,
+    items :: Map.Map String Item
+} deriving (Show)
 
 -- El estado completo del juego
-data GameState = Dummy4
+data GameState = GameState {
+    currentRoom :: Room,
+    inventory :: Map.Map String Item,
+    worldMap :: Map.Map String Room
+}
 
 -- Comandos que el jugador puede ejecutar
-data Command = Dummy5
+data Command = Ir Direction | Tomar String | Inventario | Mirar | Salir
+    deriving (Show)
 
 -- Placeholders para loadWorldData
 type RoomContainer = ()
