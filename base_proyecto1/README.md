@@ -1,7 +1,7 @@
 # Tarea 1: Motor de Aventura de Texto (CI-3661)
 
-- **Nombres:** (Nombre Estudiante 1, Nombre Estudiante 2)
-- **Carnets:** (Carnet 1, Carnet 2)
+- **Nombres:** (Mauricio Fragachán, Alan Argotte, David Díaz)
+- **Carnets:** (20-10265, 19-10664, 20-10019)
 
 ---
 
