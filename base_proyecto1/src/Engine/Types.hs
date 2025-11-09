@@ -3,7 +3,7 @@ module Engine.Types where
 import qualified Data.Map as Map
 
 -- Direcciones posibles
-data Direction = Norte | Sur | Este | Oeste 
+data Direction = Norte | Sur | Este | Oeste | Dirn't
     deriving (Show, Eq, Ord)
 
 -- Un objeto en el juego
@@ -28,5 +28,5 @@ data Command = Ir Direction | Tomar String | Inventario | Mirar | Salir
     deriving (Show)
 
 -- Placeholders para loadWorldData
-type RoomContainer = ()
-type ItemContainer = ()
+type RoomContainer = Map.Map String Room
+type ItemContainer = Map.Map String Item

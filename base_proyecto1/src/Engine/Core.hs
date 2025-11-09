@@ -22,11 +22,17 @@ processCommand command state =
           })
       Nothing -> ("Esa puerta no existe.", state)
     Mirar -> do
-      let roomItems = foldl (\x (y, Item z) -> x ++ "\n- " ++ y ++ ": " ++ z) "Objetos:" (Map.toList (items (currentRoom state)))
-      (description (currentRoom state) ++ "\n" ++ roomItems, state)
+      case Map.toList (items (currentRoom state)) of
+        [] -> (description (currentRoom state) ++ "\nObjetos:\n(No te encuentras bien, ves cosas donde no las hay).", state) 
+        _ -> do
+          let roomItems = foldl (\x (y, Item z) -> x ++ "\n- " ++ toUpper (head y) : tail y ++ ": " ++ z) "Objetos:" (Map.toList (items (currentRoom state)))
+          (description (currentRoom state) ++ "\n" ++ roomItems, state)
     Inventario -> do
-      let inventoryItems = foldl (\x (y, Item z) -> x ++ "\n- " ++ toUpper (head y) : tail y ++ ": " ++ z) "Mi inventario:" (Map.toList (inventory state))
-      (inventoryItems, state)
+      case Map.toList (inventory state) of
+        [] -> ("Estás alucinando, no tienes ni un mango.", state)
+        _ -> do
+          let inventoryItems = foldl (\x (y, Item z) -> x ++ "\n- " ++ toUpper (head y) : tail y ++ ": " ++ z) "Mi inventario:" (Map.toList (inventory state))
+          (inventoryItems, state)
     Tomar itemKey -> case Map.lookup itemKey (Map.mapKeys (map toLower) (items (currentRoom state))) of 
       Just item -> do
         let newRoom = Room {
@@ -34,7 +40,7 @@ processCommand command state =
           exits = exits (currentRoom state),
           items = Map.delete itemKey (items (currentRoom state))
         }
-        ("Haz tomado el objeto " ++ toUpper (head itemKey) : tail itemKey ++ " de la sala.", GameState{ 
+        ("Has tomado el objeto " ++ toUpper (head itemKey) : tail itemKey ++ " de la sala.", GameState{ 
           currentRoom = newRoom,
           inventory = Map.insert itemKey item (inventory state),
           worldMap = worldMap state

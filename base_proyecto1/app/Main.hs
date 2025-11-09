@@ -15,31 +15,20 @@ main = do
     -- Manejar el resultado de la carga
     -- Crear el estado inicial
     -- Iniciar el bucle del juego
-    let state = GameState{ 
-        currentRoom = Room{ 
-            description = "Sala llena de lindos recuerdos con holor a desayuno recién hecho y moscas en la basura", 
-            items = Map.fromList [("Olla quemada", Item "Olla quemada porque dejé el agua hirviendo y no la apagué"), ("Cuchara sucia", Item "Cuchara sucia de café seco")], 
-            exits =  Map.fromList [(Norte, "Sala")]
-        },
-        inventory = Map.fromList [("Papel", Item "Factura de la panadería que se te olvidó botar (nadie guarda facturas)")],
-        worldMap = Map.fromList [
-            ("Cocina",  
-            Room{ 
-                description = "Sala llena de lindos recuerdos con holor a desayuno recién hecho y moscas en la basura", 
-                items = Map.fromList [("Olla quemada", Item "Olla quemada porque dejé el agua hirviendo y no la apagué"), ("Cuchara sucia", Item "Cuchara sucia de café seco")], 
-                exits =  Map.fromList [(Norte, "Sala")]
-            }),
-            ("Sala",  
-            Room{ 
-                description = "Lugar espacioso con un gran comedor y un televisor quemado", 
-                items = Map.fromList [("Televisor", Item "Un televisor (está quemado)")], 
-                exits =  Map.fromList [(Sur, "Cocina")]
-            })
-            ]
-    }
-    putStrLn "Ingrese un comando"
-    gameLoop state
-
+    rawData <- loadWorldData "mundo copy 2.txt"
+    case rawData of
+        Left message -> putStrLn message
+        Right (roomsMap, itemsMap) -> do
+            case Map.lookupMin roomsMap of
+                Nothing -> putStrLn "Error: No fue creada ninguna sala en el juego."
+                Just (key, room) -> do
+                    let state = GameState{ 
+                        currentRoom = room,
+                        inventory = Map.fromList [],
+                        worldMap = roomsMap
+                    }
+                    putStrLn "Ingrese un comando"
+                    gameLoop state
 
 -- El bucle principal del juego
 gameLoop :: GameState -> IO ()
