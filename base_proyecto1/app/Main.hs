@@ -15,7 +15,7 @@ main = do
     -- Manejar el resultado de la carga
     -- Crear el estado inicial
     -- Iniciar el bucle del juego
-    rawData <- loadWorldData "mundo copy 2.txt"
+    rawData <- loadWorldData "mundo.txt"
     case rawData of
         Left message -> putStrLn message
         Right (roomsMap, itemsMap) -> do

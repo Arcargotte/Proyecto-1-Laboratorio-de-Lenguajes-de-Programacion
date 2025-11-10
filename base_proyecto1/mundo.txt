@@ -3,3 +3,33 @@ DESC: Unas llaves brillantes.
 ---
 ITEM: cuchillo
 DESC: Un cuchillo afilado.
+---
+ITEM: olla
+DESC: Una olla quemada. Dejé agua hirviendo y se me olvidó apagar la hornilla...
+---
+ITEM: jabon
+DESC: Un jabón nuevo con olor a lavanda (eso dice la envoltura, pero nunca has olido lavanda).
+---
+ITEM: cuchara
+DESC: Una cuchara sucia de café seco
+---
+ITEM: televisor
+DESC: Un televisor (está quemado)
+---
+SALA: Sala de Estar
+DESC: Una acogedora sala de estar con un gran comedor y un televisor quemado. Hay una puerta al norte y al este.
+SALIDA: Norte -> Cocina
+OBJETO: llaves
+SALIDA: Este -> Lavadero
+OBJETO: televisor
+---
+SALA: Cocina
+DESC: Una cocina desordenada con olor a desayuno recién hecho. Hay una puerta al sur.
+SALIDA: Sur -> Sala de Estar
+OBJETO: cuchillo
+OBJETO: olla
+---
+SALA: Lavadero
+DESC: Aquí lavas la ropa sucia, porque limpiar ropa limpia está complicado, ¿no? Hay una puerta al oeste
+SALIDA: Oeste -> Sala de Estar
+OBJETO: jabon
