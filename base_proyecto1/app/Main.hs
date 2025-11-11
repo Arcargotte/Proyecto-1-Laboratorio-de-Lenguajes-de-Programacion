@@ -9,6 +9,13 @@ import System.IO
 
 import qualified Data.Map as Map
 
+-- -------------------------------------------------------------------------------------
+-- Función main
+-- -------------------------------------------------------------------------------------
+-- Función principal del juego.
+-- Se encarga de cargar los datos del mundo desde un archivo,
+-- Manejar errores de carga, inicializar el estado del juego
+-- Y finalmente iniciar el bucle principal del juego.
 main :: IO ()
 main = do
     -- Cargar el mundo
@@ -18,20 +25,27 @@ main = do
     rawData <- loadWorldData "mundo.txt"
     case rawData of
         Left message -> putStrLn message
-        Right (roomsMap, itemsMap) -> do
+        Right (roomsMap, itemsMap) ->
             case Map.lookupMin roomsMap of
                 Nothing -> putStrLn "Error: No fue creada ninguna sala en el juego."
                 Just (key, room) -> do
-                    let state = GameState{
-                        roomID = key,
-                        currentRoom = room,
-                        inventory = Map.fromList [],
-                        worldMap = roomsMap
-                    }
+                    let 
+                        state = GameState{
+                            roomID = key,
+                            currentRoom = room,
+                            inventory = Map.fromList [],
+                            worldMap = roomsMap
+                        }
                     putStrLn "Ingrese un comando"
                     gameLoop state
 
--- El bucle principal del juego
+-- -------------------------------------------------------------------------------------
+-- Función gameLoop
+-- -------------------------------------------------------------------------------------
+-- función que implementa el bucle principal del juego. 
+-- Se encarga de leer los comandos introducidos por el jugador, 
+-- procesarlos y actualizar el estado del juego de forma recursiva 
+-- hasta que el jugador decida salir.
 gameLoop :: GameState -> IO ()
 gameLoop state = do
     -- Parsear la entrada del usuario a un Command
