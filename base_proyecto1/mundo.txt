@@ -11,10 +11,19 @@ ITEM: jabon
 DESC: Un jabón nuevo con olor a lavanda (eso dice la envoltura, pero nunca has olido lavanda).
 ---
 ITEM: cuchara
-DESC: Una cuchara sucia de café seco
+DESC: Una cuchara sucia de café seco.
 ---
 ITEM: televisor
-DESC: Un televisor (está quemado)
+DESC: Un televisor (está quemado).
+---
+ITEM: libro
+DESC: Un libro de recetas con manchas de grasa y notas escritas al margen.
+---
+ITEM: linterna
+DESC: Una linterna sin baterías.
+---
+ITEM: mapa
+DESC: Un mapa viejo y arrugado de la casa, con algunas habitaciones tachadas.
 ---
 SALA: Sala de Estar
 DESC: Una acogedora sala de estar con un gran comedor y un televisor quemado. Hay una puerta al norte y al este.
@@ -24,12 +33,36 @@ SALIDA: Este -> Lavadero
 OBJETO: televisor
 ---
 SALA: Cocina
-DESC: Una cocina desordenada con olor a desayuno recién hecho. Hay una puerta al sur.
+DESC: Una cocina desordenada con olor a desayuno recién hecho. Hay una puerta al sur y otra al este.
 SALIDA: Sur -> Sala de Estar
+SALIDA: Este -> Comedor
 OBJETO: cuchillo
 OBJETO: olla
 ---
 SALA: Lavadero
-DESC: Aquí lavas la ropa sucia, porque limpiar ropa limpia está complicado, ¿no? Hay una puerta al oeste
+DESC: Aquí lavas la ropa sucia, porque limpiar ropa limpia está complicado, ¿no? Hay una puerta al oeste y otra al norte.
 SALIDA: Oeste -> Sala de Estar
+SALIDA: Norte -> Patio
 OBJETO: jabon
+---
+SALA: Comedor
+DESC: Una mesa grande llena de platos sucios. Hay una puerta al oeste y otra al norte.
+SALIDA: Oeste -> Cocina
+SALIDA: Norte -> Despensa
+OBJETO: cuchara
+OBJETO: libro
+---
+SALA: Patio
+DESC: Un pequeño patio con plantas marchitas y una mesa de madera vieja. Hay una puerta al sur y otra al este.
+SALIDA: Sur -> Lavadero
+SALIDA: Este -> Despacho
+OBJETO: linterna
+---
+SALA: Despensa
+DESC: Estantes vacíos y un fuerte olor a humedad. Hay una puerta al sur.
+SALIDA: Sur -> Comedor
+OBJETO: mapa
+---
+SALA: Despacho
+DESC: Un escritorio lleno de papeles. Parece que alguien intentó escribir algo importante pero nunca terminó. Hay una puerta al oeste.
+SALIDA: Oeste -> Patio

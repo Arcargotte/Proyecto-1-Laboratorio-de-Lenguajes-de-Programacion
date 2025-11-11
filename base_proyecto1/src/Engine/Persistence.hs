@@ -7,17 +7,21 @@ import qualified Data.Map as Map
 import Data.Char (isSpace, toLower)
 import Data.List (dropWhileEnd)
 
+-- Función auxiliar para eliminar espacios en blanco en ambos extremos de un string.
+
 trim :: String -> String
 trim = dropWhileEnd isSpace . dropWhile isSpace
 
-parseRoom :: [String] -> String -> String -> String -> Direction -> String -> [(Direction, String)] -> String -> [(String, Item)] -> RoomContainer -> ItemContainer -> Either String RoomContainer
+-- parseRoom: función recursiva auxiliar que se encarga de parsear las características de las salas del mundo (nombre, descripción, objetos, salidas). Es llamada por la función parseWorld.
+
+parseRoom :: [String] -> String -> String -> String -> Direction -> String -> Map.Map Direction String -> String -> Map.Map String Item -> RoomContainer -> ItemContainer -> Either String RoomContainer
 parseRoom wordsList parseType accRoomName accRoomDesc dirMemory accExitRoom accExits accItemName accItems roomsMap itemsMap = do
   case wordsList of
     [] -> do
       let newRoom = Room {
         description = accRoomDesc,
-        items = Map.fromList accItems,
-        exits = Map.fromList accExits
+        items = accItems,
+        exits = accExits
       }
       let newRoomsMap = Map.insert accRoomName newRoom roomsMap
       Right newRoomsMap
@@ -31,11 +35,11 @@ parseRoom wordsList parseType accRoomName accRoomDesc dirMemory accExitRoom accE
         "---" -> do
           let newRoom = Room {
             description = accRoomDesc,
-            items = Map.fromList accItems,
-            exits = Map.fromList accExits
+            items = accItems,
+            exits = accExits
           }
           let newRoomsMap = Map.insert accRoomName newRoom roomsMap
-          parseRoom (tail(wordsList)) "" "" "" Dirn't "" [] "" [] newRoomsMap itemsMap
+          parseRoom (tail(wordsList)) "" "" "" Dirn't "" (Map.fromList []) "" (Map.fromList []) newRoomsMap itemsMap
         _ -> do
           case parseType of
             "room" -> do
@@ -58,12 +62,12 @@ parseRoom wordsList parseType accRoomName accRoomDesc dirMemory accExitRoom accE
               let newAcc = trim (accExitRoom ++ " " ++ newWord)
               case tail(wordsList) of
                 [] -> do
-                  let newAccExits = (dirMemory, newAcc) : accExits
+                  let newAccExits = Map.insert dirMemory newAcc accExits
                   parseRoom (tail(wordsList)) "exitRoom" accRoomName accRoomDesc Dirn't "" newAccExits "" accItems roomsMap itemsMap
                 _ -> do
                   case head (tail wordsList) of
                     val | val == "---" || val == "OBJETO:" || val == "SALIDA:" -> do
-                      let newAccExits = (dirMemory, newAcc) : accExits
+                      let newAccExits = Map.insert dirMemory newAcc accExits
                       parseRoom (tail(wordsList)) "exitRoom" accRoomName accRoomDesc Dirn't "" newAccExits "" accItems roomsMap itemsMap
                     _ -> parseRoom (tail(wordsList)) "exitRoom" accRoomName accRoomDesc dirMemory newAcc accExits "" accItems roomsMap itemsMap
             "item" -> do
@@ -73,7 +77,7 @@ parseRoom wordsList parseType accRoomName accRoomDesc dirMemory accExitRoom accE
                 [] -> do
                   case Map.lookup newAcc itemsMap of
                     Just item -> do
-                      let newAccItems = (newAcc, item) : accItems
+                      let newAccItems = Map.insert newAcc item accItems
                       parseRoom (tail(wordsList)) "item" accRoomName accRoomDesc Dirn't "" accExits "" newAccItems roomsMap itemsMap
                     Nothing -> Left ("Error: El objeto " ++ newAcc ++ " no existe.")
                 _ -> do
@@ -81,12 +85,13 @@ parseRoom wordsList parseType accRoomName accRoomDesc dirMemory accExitRoom accE
                     val | val == "---" || val == "OBJETO:" || val == "SALIDA" -> do
                       case Map.lookup newAcc itemsMap of
                         Just item -> do
-                          let newAccItems = (newAcc, item) : accItems
+                          let newAccItems = Map.insert newAcc item accItems
                           parseRoom (tail(wordsList)) "item" accRoomName accRoomDesc Dirn't "" accExits "" newAccItems roomsMap itemsMap
                         Nothing -> Left ("Error: El objeto " ++ newAcc ++ " no existe.")
                     _ -> parseRoom (tail(wordsList)) "item" accRoomName accRoomDesc Dirn't "" accExits newAcc accItems roomsMap itemsMap
 
-
+-- parseWorld: función principal que se encarga de parsear el mundo dado un archivo .txt. Parsea las características de los objetos y llama a parseRoom para parsear las características de las salas
+--             del  mundo.
 
 parseWorld :: [String] -> String -> String -> String -> ItemContainer -> Either String (ItemContainer, RoomContainer)
 parseWorld wordsList parseType accItemName accItemDesc itemsMap = do
@@ -97,7 +102,7 @@ parseWorld wordsList parseType accItemName accItemDesc itemsMap = do
         "ITEM:" -> parseWorld (tail(wordsList)) "item" "" "" itemsMap
         "DESC:" -> parseWorld (tail(wordsList)) "desc" accItemName "" itemsMap
         "SALA:" -> do
-          let parsedRoomSection = parseRoom (tail(wordsList)) "room" "" "" Dirn't "" [] "" [] (Map.fromList []) itemsMap
+          let parsedRoomSection = parseRoom (tail(wordsList)) "room" "" "" Dirn't "" (Map.fromList []) "" (Map.fromList []) (Map.fromList []) itemsMap
           case parsedRoomSection of
             Left error -> Left error
             Right roomsMap -> Right (itemsMap, roomsMap)

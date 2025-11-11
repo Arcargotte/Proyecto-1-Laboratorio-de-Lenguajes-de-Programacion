@@ -18,6 +18,7 @@ data Room = Room {
 
 -- El estado completo del juego
 data GameState = GameState {
+    roomID :: String,
     currentRoom :: Room,
     inventory :: Map.Map String Item,
     worldMap :: Map.Map String Room

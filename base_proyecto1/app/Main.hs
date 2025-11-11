@@ -22,7 +22,8 @@ main = do
             case Map.lookupMin roomsMap of
                 Nothing -> putStrLn "Error: No fue creada ninguna sala en el juego."
                 Just (key, room) -> do
-                    let state = GameState{ 
+                    let state = GameState{
+                        roomID = key,
                         currentRoom = room,
                         inventory = Map.fromList [],
                         worldMap = roomsMap

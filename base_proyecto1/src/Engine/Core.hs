@@ -16,6 +16,7 @@ processCommand command state =
         let newRoom = Map.lookup roomKey (worldMap state)
         case newRoom of
           Just room -> ("Te has movido a " ++ roomKey, GameState{ 
+            roomID = roomKey,
             currentRoom = room,
             inventory = inventory state,
             worldMap = worldMap state
@@ -40,10 +41,12 @@ processCommand command state =
           exits = exits (currentRoom state),
           items = Map.delete itemKey (items (currentRoom state))
         }
-        ("Has tomado el objeto " ++ toUpper (head itemKey) : tail itemKey ++ " de la sala.", GameState{ 
+        let newWorldMap = Map.delete (roomID state) (worldMap state)
+        ("Has tomado el objeto " ++ toUpper (head itemKey) : tail itemKey ++ " de la sala.", GameState{
+          roomID = roomID state,
           currentRoom = newRoom,
           inventory = Map.insert itemKey item (inventory state),
-          worldMap = worldMap state
+          worldMap = Map.insert (roomID state) newRoom newWorldMap
         })
       Nothing -> ("Empiezas a alucinar, no existe este ítem en la sala.", state)
       
